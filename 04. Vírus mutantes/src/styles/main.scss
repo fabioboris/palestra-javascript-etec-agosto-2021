@@ -1,0 +1,21 @@
+$bg: #222;
+$fg: #666;
+$size: 40px;
+
+body {
+  background-color: $bg;
+  color: $fg;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+#models {
+  display: none;
+}
+main svg {
+  position: absolute;
+  width: $size;
+  height: $size;
+  transition: all 0.6s;
+  transform-origin: center center;
+  opacity: 0.9;
+}

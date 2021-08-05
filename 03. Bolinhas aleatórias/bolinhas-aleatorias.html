@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            div.bolinha {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                transition: all 0.6s;
+                opacity: 0.9;
+            }
+        </style>
+    </head>
+    <body>
+        <main></main>
+        <script>
+            (function () {
+                const MAX_OBJS = 50;
+
+                const MAX_LEFT =
+                    window.innerWidth ||
+                    document.documentElement.clientWidth ||
+                    document.body.clientWidth;
+
+                const MAX_TOP =
+                    window.innerHeight ||
+                    document.documentElement.clientHeight ||
+                    document.body.clientHeight;
+
+                const MIN_LEFT = 0;
+                const MIN_TOP = 0;
+
+                const MIN_SIZE = 10;
+                const MAX_SIZE = 100;
+
+                const SIZE_STEP = 10;
+                const MOVE_STEP = 10;
+
+                let objs = [];
+
+                let objModel = {
+                    id: "",
+                    size: 0,
+                    left: 0,
+                    top: 0,
+                    color: 0,
+                    speed: 0,
+                };
+
+                let aleatorio = (min, max) => {
+                    min = Math.ceil(min);
+                    max = Math.floor(max);
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                };
+
+                let corAleatoria = () => {
+                    return "#" + aleatorio(0, 0xffffff).toString(16);
+                };
+
+                let limitar = (num, min, max) => {
+                    return Math.min(Math.max(num, min), max);
+                };
+
+                let trocarCores = (ev) => {
+                    if (ev.key == " ") {
+                        objs.forEach((obj) => {
+                            obj.color = corAleatoria();
+                        });
+                    }
+                };
+
+                let atualizar = () => {
+                    objs.forEach((obj) => {
+                        obj.size = limitar(
+                            obj.size + aleatorio(-SIZE_STEP, SIZE_STEP),
+                            MIN_SIZE,
+                            MAX_SIZE
+                        );
+                        obj.left = limitar(
+                            obj.left + aleatorio(-obj.speed, obj.speed),
+                            MIN_LEFT,
+                            MAX_LEFT - obj.size
+                        );
+                        obj.top = limitar(
+                            obj.top + aleatorio(-obj.speed, obj.speed),
+                            MIN_TOP,
+                            MAX_TOP - obj.size
+                        );
+                    });
+                };
+
+                let desenhar = () => {
+                    objs.forEach((obj) => {
+                        let el = document.getElementById(obj.id);
+                        el.style.left = obj.left + "px";
+                        el.style.top = obj.top + "px";
+                        el.style.width = obj.size + "px";
+                        el.style.height = obj.size + "px";
+                        el.style.borderRadius = obj.size / 2 + "px";
+                        el.style.backgroundColor = obj.color;
+                    });
+                };
+
+                let inicializar = () => {
+                    for (let i = 0; i < MAX_OBJS; i++) {
+                        let el = document.createElement("div");
+                        el.className = "bolinha";
+                        el.id = "bolinha" + i;
+                        // el.innerText = i;
+                        document.querySelector("main").appendChild(el);
+
+                        let obj = { ...objModel };
+                        obj.id = el.id;
+                        obj.size = aleatorio(MIN_SIZE, MAX_SIZE);
+                        obj.left = aleatorio(MIN_LEFT, MAX_LEFT - obj.size);
+                        obj.top = aleatorio(MIN_TOP, MAX_TOP - obj.size);
+                        obj.color = corAleatoria();
+                        obj.speed = MOVE_STEP * aleatorio(1, 10);
+                        objs.push(obj);
+                    }
+
+                    window.setInterval(() => {
+                        atualizar();
+                        desenhar();
+                    }, 60);
+                };
+
+                window.addEventListener("load", inicializar);
+                document.addEventListener("keydown", trocarCores);
+            })();
+        </script>
+    </body>
+</html>

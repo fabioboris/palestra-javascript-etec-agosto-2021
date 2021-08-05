@@ -1,0 +1,14 @@
+body {
+  background-color: darkslateblue;
+}
+
+#bolinha {
+  background-color: crimson;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: 200px;
+  top: 200px;
+  border-radius: 50px;
+  transition: all 0.5s;
+}
